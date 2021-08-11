@@ -32,7 +32,7 @@ export default {
 a.button4 {
   display: inline-block;
   padding: 0.3em 1.2em;
-  margin: 0 0.1em 0.1em 0;
+  margin: 0 0.1em 0.3em 0.2em;
   border: 0.16em solid rgba(255, 255, 255, 0);
   border-radius: 2em;
   box-sizing: border-box;
@@ -54,5 +54,4 @@ a.button4:hover {
     margin: 0.2em auto;
   }
 }
-
 </style>
