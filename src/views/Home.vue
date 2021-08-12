@@ -1,7 +1,10 @@
 <template>
   <div class="home">
     <h1>SA Degree Chooser</h1>
-    <h4>Discover what undergraduate degree courses are available in South Africa by selecting a max of 10 tags below.</h4>
+    <h4>
+      Discover what undergraduate degree courses are available in South Africa
+      by selecting a max of 10 tags below.
+    </h4>
     <div class="card">
       <h3>Pick some words that describe you</h3>
       <BubbleText
@@ -69,7 +72,6 @@
         buttonColour="#4e9af1"
         @tag-press="tagPressedEmitterReceived"
       />
-      
     </div>
     <div class="card">
       <h3>Pick some topics that you are interested in</h3>
@@ -228,7 +230,6 @@
         buttonColour="#4e9af1"
         @tag-press="tagPressedEmitterReceived"
       />
-      
     </div>
   </div>
   <BubbleText
@@ -241,7 +242,13 @@
     buttonColour="black"
     v-on:click="pressToCreateDegree"
   /> -->
-  <div class="results card" v-bind:style="{ display: findDegreeButtPress ? 'block' : 'none' }">
+  <div
+    class="results card"
+    v-bind:style="{ display: findDegreeButtPress ? 'block' : 'none' }"
+  >
+    <h2 v-bind:style="{ display: moreThan10Tags ? 'block' : 'none' }">
+      Only select a maximum of 10 tags!
+    </h2>
     <h3>
       Based on your answers above you should have a look at the following
       degrees
@@ -271,7 +278,8 @@ export default {
   },
   data() {
     return {
-      findDegreeButtPress : false ,
+      findDegreeButtPress: false,
+      moreThan10Tags: false,
       degrees: [], // to be populated later by Firebase query
       tags: [], // populated when each tag button pressed
       inOrderRelevancies: [],
@@ -284,49 +292,53 @@ export default {
     // },
 
     async findDegreePressed() {
-      this.findDegreeButtPress = !this.findDegreeButtPress ;
-      // do DB search for degrees with these tags and add to degrees tab with counters
-      this.degrees=[] ; // clear results array
-      // this.tags contains tags to search with
-      const degreeQuery = await getDegreeList(this.tags); // FB call
-      let degreeList = [] ;
-      degreeQuery.forEach(doc => {
-        degreeList.push(doc.data()) ;
-      })
-      // degreeList now has list of all possible degrees the user might be interested in
-      let relevancy = []; // initialize counters
-      for (var i = 0; i < degreeList.length; i++) {
-        relevancy.push(0);
+      if (this.findDegreeButtPress == false) {
+        this.findDegreeButtPress = true;
       }
-      // now sum each degree's relevancy
-      for (var i = 0; i < degreeList.length; i++) {
-        this.tags.forEach(tag => {
-          if (degreeList[i].tags.includes(tag)) {
-            relevancy[i] = relevancy[i] + 1 ;
-          } 
-        }) ;
-      }
-      console.log(relevancy);
-      console.log(degreeList);
-      // find top 20 most relevant degrees
-      for(var i = 0 ; i < 20 ; i++) {
-        var maxRelevancy=-1;
-        let indexMaxRelevancy =-1 ;
-        // find next most relevant and pop it off
-        for(var j = 0 ; j < degreeList.length ; j++) {
-          if(relevancy[j] > maxRelevancy) {
-            indexMaxRelevancy = j ;
-            maxRelevancy = relevancy[j] ;
+      if (this.tags.length <= 10) {
+        // do DB search for degrees with these tags and add to degrees tab with counters
+        this.degrees = []; // clear results array
+        // this.tags contains tags to search with
+        const degreeQuery = await getDegreeList(this.tags); // FB call
+        let degreeList = [];
+        degreeQuery.forEach((doc) => {
+          degreeList.push(doc.data());
+        });
+        // degreeList now has list of all possible degrees the user might be interested in
+        let relevancy = []; // initialize counters
+        for (var i = 0; i < degreeList.length; i++) {
+          relevancy.push(0);
+        }
+        // now sum each degree's relevancy
+        for (var i = 0; i < degreeList.length; i++) {
+          this.tags.forEach((tag) => {
+            if (degreeList[i].tags.includes(tag)) {
+              relevancy[i] = relevancy[i] + 1;
+            }
+          });
+        }
+        // find top 20 most relevant degrees
+        for (var i = 0; i < 20; i++) {
+          var maxRelevancy = -1;
+          let indexMaxRelevancy = -1;
+          // find next most relevant and pop it off
+          for (var j = 0; j < degreeList.length; j++) {
+            if (relevancy[j] > maxRelevancy) {
+              indexMaxRelevancy = j;
+              maxRelevancy = relevancy[j];
+            }
           }
-      }
-      this.degrees.push(degreeList[indexMaxRelevancy]) ; // add degrees in order of relevancy
-      degreeList = degreeList.filter((degree => degree!== degreeList[indexMaxRelevancy])) ; // remove degree from degreeList when it's added to the sorted list
-      relevancy.splice(indexMaxRelevancy,1) ;
+          this.degrees.push(degreeList[indexMaxRelevancy]); // add degrees in order of relevancy
+          degreeList = degreeList.filter(
+            (degree) => degree !== degreeList[indexMaxRelevancy]
+          ); // remove degree from degreeList when it's added to the sorted list
+          relevancy.splice(indexMaxRelevancy, 1);
+        }
       }
       // Display results card and render each degree in degrees
-      setTimeout(function(){ window.scrollBy(0, 200)});
-      
-      
+      setTimeout(function () {
+        window.scrollBy(0, 200);
+      });
     },
 
     tagPressedEmitterReceived(tIn) {
@@ -338,18 +350,24 @@ export default {
         // add it
         this.tags.push(tIn);
       }
-      console.log(this.tags);
+      if (this.tags.length > 10) {
+        this.moreThan10Tags = true;
+        setTimeout(function () {
+          window.scrollBy(0, 200);
+        });
+      } else {
+        this.moreThan10Tags = false;
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-
 h1 {
-  font-family: 'Delius Unicase', cursive;
+  font-family: "Delius Unicase", cursive;
   font-size: 4rem;
-  margin: 1rem ;
+  margin: 1rem;
 }
 
 h4 {
@@ -359,7 +377,7 @@ h4 {
   border-radius: 15px;
   padding: 0.5rem;
   margin: 1rem 6rem 2rem 6rem;
-  background: #2C394B;
+  background: #2c394b;
   transition: 0.4s ease-out;
   box-shadow: 0px 3px 5px;
 }
@@ -368,12 +386,10 @@ h4 {
   transform: translateY(0.2rem);
 }
 
-
 @media (max-width: 50rem) {
-.card {
-  padding: 0.5rem;
-  margin: 1rem 1rem 1rem 1rem;
+  .card {
+    padding: 0.5rem;
+    margin: 1rem 1rem 1rem 1rem;
   }
 }
-
 </style>
