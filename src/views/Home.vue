@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <h1>Tuks Degree Chooser</h1>
+    <h1>SA Degree Chooser</h1>
+    <h4>Discover what undergraduate degree courses are available in South Africa by selecting a max of 10 tags below.</h4>
     <div class="card">
       <h3>Pick some words that describe you</h3>
       <BubbleText
@@ -240,12 +241,12 @@
     buttonColour="black"
     v-on:click="pressToCreateDegree"
   /> -->
-  <div class="results card">
+  <div class="results card" v-bind:style="{ display: findDegreeButtPress ? 'block' : 'none' }">
     <h3>
       Based on your answers above you should have a look at the following
       degrees
     </h3>
-    <h4>Click for more details</h4>
+    <h5>Click on a degree for more details</h5>
     <ListItem
       v-for="degree in degrees"
       :key="degree.degreeCode"
@@ -270,6 +271,7 @@ export default {
   },
   data() {
     return {
+      findDegreeButtPress : false ,
       degrees: [], // to be populated later by Firebase query
       tags: [], // populated when each tag button pressed
       inOrderRelevancies: [],
@@ -282,6 +284,7 @@ export default {
     // },
 
     async findDegreePressed() {
+      this.findDegreeButtPress = !this.findDegreeButtPress ;
       // do DB search for degrees with these tags and add to degrees tab with counters
       this.degrees=[] ; // clear results array
       // this.tags contains tags to search with
@@ -339,20 +342,35 @@ export default {
 </script>
 
 <style scoped>
+
 h1 {
-  font-family: "Ultra", serif;
+  font-family: 'Delius Unicase', cursive;
   font-size: 4rem;
+  margin: 1rem ;
+}
+
+h4 {
+  margin: 0 2rem 0 2rem;
 }
 .card {
   border-radius: 15px;
   padding: 0.5rem;
   margin: 1rem 6rem 2rem 6rem;
-  background: #ffaa4c;
+  background: #2C394B;
   transition: 0.4s ease-out;
-  box-shadow: 0px 7px 10px;
+  box-shadow: 0px 3px 5px;
 }
 
 .card:hover {
   transform: translateY(0.2rem);
 }
+
+
+@media (max-width: 680px) {
+.card {
+  padding: 0.5rem;
+  margin: 1rem 1rem 1rem 1rem;
+  }
+}
+
 </style>

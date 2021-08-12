@@ -1,6 +1,6 @@
 <template>
   <a
-    v-bind:style="{ background: isPress ? 'black' : 'grey' }"
+    v-bind:style="{ background: (isPress ? 'black' : '#FF4C29'),borderColor: (isPress? 'rgba(255, 255, 255, 1)' : 'transparent' ) }"
     v-on:click="tagPressed(textInput)"
     class="button4"
     >{{ textInput }}</a
@@ -15,16 +15,16 @@ export default {
     buttonColour: String,
   },
   methods: {
-      tagPressed(tIn) {
-          this.$emit('tag-press', tIn) ; // event emitter
-          this.isPress = !this.isPress ;
-      }
+    tagPressed(tIn) {
+      this.$emit("tag-press", tIn); // event emitter
+      this.isPress = !this.isPress;
+    },
   },
   data() {
-      return {
-        isPress: false
-      }
-  }
+    return {
+      isPress: false,
+    };
+  },
 };
 </script>
 
@@ -32,7 +32,7 @@ export default {
 a.button4 {
   display: inline-block;
   padding: 0.3em 1.2em;
-  margin: 0 0.1em 0.3em 0.2em;
+  margin: 0.3em 0.1em 0.3em 0.2em;
   border: 0.16em solid rgba(255, 255, 255, 0);
   border-radius: 2em;
   box-sizing: border-box;
@@ -54,4 +54,5 @@ a.button4:hover {
     margin: 0.2em auto;
   }
 }
+
 </style>
