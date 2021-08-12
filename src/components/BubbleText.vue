@@ -48,11 +48,4 @@ a.button4:hover {
   border-color: rgba(255, 255, 255, 1);
 }
 
-@media all and (max-width: 30em) {
-   a.button4 {
-    display: block;
-    margin: 0.2em auto;
-  }
-}
-
 </style>

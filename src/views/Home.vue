@@ -324,6 +324,9 @@ export default {
       relevancy.splice(indexMaxRelevancy,1) ;
       }
       // Display results card and render each degree in degrees
+      setTimeout(function(){ window.scrollBy(0, 200)});
+      
+      
     },
 
     tagPressedEmitterReceived(tIn) {
@@ -366,7 +369,7 @@ h4 {
 }
 
 
-@media (max-width: 680px) {
+@media (max-width: 50rem) {
 .card {
   padding: 0.5rem;
   margin: 1rem 1rem 1rem 1rem;
